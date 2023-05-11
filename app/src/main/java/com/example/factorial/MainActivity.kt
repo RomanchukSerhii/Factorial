@@ -2,10 +2,54 @@ package com.example.factorial
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import com.example.factorial.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private val binding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val viewModel by lazy {
+        ViewModelProvider(this)[MainViewModel::class.java]
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
+        observeViewModel()
+        binding.calculateButton.setOnClickListener {
+            viewModel.calculate(binding.etEnterNumber.text.toString())
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.error.observe(this){ error ->
+            if (error) {
+                Toast.makeText(
+                    this,
+                    "You did not enter value",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        viewModel.progress.observe(this) { showProgress ->
+            if (showProgress) {
+                binding.progressBarLoading.visibility = View.VISIBLE
+                binding.calculateButton.isEnabled = false
+            } else {
+                binding.progressBarLoading.visibility = View.GONE
+                binding.calculateButton.isEnabled = true
+            }
+        }
+
+        viewModel.factorial.observe(this) { factorial ->
+            binding.tvFactorialValue.text = factorial
+
+        }
     }
 }

@@ -16,11 +16,12 @@ class MainViewModel : ViewModel() {
     val factorial: LiveData<String> = _factorial
 
     private val _progress = MutableLiveData<Boolean>()
-    val process: LiveData<Boolean> = _progress
+    val progress: LiveData<Boolean> = _progress
 
     fun calculate(value: String?) {
         _progress.value = true
         if (value.isNullOrBlank()) {
+            _progress.value = false
             _error.value = true
             return
         }
