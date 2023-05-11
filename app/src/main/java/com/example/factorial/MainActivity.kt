@@ -43,8 +43,8 @@ class MainActivity : AppCompatActivity() {
                     binding.progressBarLoading.visibility = View.VISIBLE
                     binding.calculateButton.isEnabled = false
                 }
-                is Result -> {
-                    binding.tvFactorialValue.text = state.factorial
+                is Factorial -> {
+                    binding.tvFactorialValue.text = state.value
                 }
             }
         }
